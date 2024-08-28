@@ -1,0 +1,8 @@
+mutation {
+    createVendor(name: "Test vendor", numberOfEmployees: 123, country: "Portugal") {
+        name
+        numberOfEmployees
+        country
+    }
+}
+

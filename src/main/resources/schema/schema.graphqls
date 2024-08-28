@@ -1,0 +1,13 @@
+type Vendor {
+    name: String
+    numberOfEmployees: Int
+    country: String
+}
+
+type Query {
+    vendors: [Vendor]
+}
+
+type Mutation {
+    createVendor(name: String, numberOfEmployees: Int, country: String): Vendor
+}
