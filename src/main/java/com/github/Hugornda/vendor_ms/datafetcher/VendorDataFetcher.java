@@ -1,9 +1,9 @@
 package com.github.Hugornda.vendor_ms.datafetcher;
 
 import com.github.Hugornda.vendor_ms.model.Vendor;
-import com.github.Hugornda.vendor_ms.repository.VendorRepository;
+import com.github.Hugornda.vendor_ms.service.VendorService;
 import com.netflix.graphql.dgs.DgsComponent;
-import com.netflix.graphql.dgs.DgsQuery;
+import com.netflix.graphql.dgs.DgsSubscription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
@@ -15,15 +15,15 @@ public class VendorDataFetcher {
 
     private static final Logger log = LoggerFactory.getLogger(VendorDataFetcher.class);
 
-    private final VendorRepository vendorRepository;
+    private final VendorService vendorService;
 
-    public VendorDataFetcher(VendorRepository vendorRepository) {
-        this.vendorRepository = vendorRepository;
+    public VendorDataFetcher(VendorService vendorService) {
+        this.vendorService = vendorService;
     }
 
-    @DgsQuery(field = "vendors")
+    @DgsSubscription(field = "vendors")
     public Flux<Vendor> getVendors() {
-        return vendorRepository.findAll()
+        return vendorService.findAll()
                 .doOnNext(res->log.info(toJsonString(res)));
     }
 }

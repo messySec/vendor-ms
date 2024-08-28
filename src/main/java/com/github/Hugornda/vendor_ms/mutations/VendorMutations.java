@@ -2,26 +2,23 @@ package com.github.Hugornda.vendor_ms.mutations;
 
 import com.github.Hugornda.vendor_ms.model.Vendor;
 import com.github.Hugornda.vendor_ms.model.exceptions.InvalidInputException;
-import com.github.Hugornda.vendor_ms.model.exceptions.VendorAlreadyExistsException;
-import com.github.Hugornda.vendor_ms.repository.VendorRepository;
+import com.github.Hugornda.vendor_ms.service.VendorService;
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsMutation;
 import com.netflix.graphql.dgs.InputArgument;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import reactor.core.publisher.Mono;
-
-import static com.github.Hugornda.vendor_ms.utils.FormatterUtils.toJsonString;
 
 @Slf4j
 @DgsComponent
 public class VendorMutations {
 
-    private final VendorRepository vendorRepository;
+    private final VendorService vendorServiceImp;
 
-    public VendorMutations(VendorRepository vendorRepository) {
-        this.vendorRepository = vendorRepository;
+    public VendorMutations( VendorService vendorServiceImp) {
+
+        this.vendorServiceImp = vendorServiceImp;
     }
 
     @DgsMutation
@@ -38,10 +35,6 @@ public class VendorMutations {
             return Mono.error(new InvalidInputException(String.format(ERROR_MESSAGE,"country")));
         }
 
-        Vendor vendor = new Vendor(name, numberOfEmployees, country);
-        return vendorRepository.save(vendor)
-                .doOnNext(res-> log.info("Created vendor: {}", toJsonString(res)))
-                .onErrorResume(DuplicateKeyException.class, e -> Mono.error(
-                        new VendorAlreadyExistsException("A vendor with this name already exists.")));
+        return vendorServiceImp.createVendor(name,numberOfEmployees,country);
     }
 }

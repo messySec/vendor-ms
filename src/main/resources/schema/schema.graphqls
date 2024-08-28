@@ -4,8 +4,8 @@ type Vendor {
     country: String
 }
 
-type Query {
-    vendors: [Vendor]
+type Subscription {
+    vendors: Vendor
 }
 
 type Mutation {

@@ -1,1 +1,8 @@
+pluginManagement {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal() // Add this line to enable the Gradle Plugin Portal
+    }
+}
+
 rootProject.name = 'vendor-ms'
